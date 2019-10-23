@@ -78,7 +78,7 @@ app.use(bodyParser.urlencoded({
 app.use(session({ //session initializer
 	store: sessionStore,
 	cookie: {
-		secure: true
+		secure: false
 	},
 	secret: process.env.SESSION_SECRET,
 	resave: false,
@@ -267,7 +267,7 @@ const school = '/Users/svovchyn/goinfre/Downloads/';
 
 // allows using current user data across all the views
 app.use((req, res, next) => {
-	res.locals.downPath = home;
+	res.locals.downPath = school;
 	res.locals.portik = process.env.PORTIK;
 	res.locals.oauth = false;
 	res.locals.message = "";

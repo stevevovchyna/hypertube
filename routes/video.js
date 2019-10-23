@@ -250,7 +250,7 @@ router.get('/subtitles/:encoded_path',
 			if (fileSize > 0) {
 				const head = {
 					'Content-Length': fileSize,
-					'Content-Type': 'TextTrack',
+					'Content-Type': 'text/vtt',
 				}
 				res.writeHead(200, head);
 				fs.createReadStream(path).pipe(res);

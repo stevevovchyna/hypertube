@@ -164,29 +164,28 @@ router.get('/auth/42', middleware.checkIfLogged, passport.authenticate('42'));
 
 router.get('/auth/42/callback',
 	passport.authenticate('42', {
+		successRedirect: "/research",
+		successFlash: true,
 		failureRedirect: "/login",
 		failureFlash: true
-	}), (req, res) => {
-		// Successful authentication, redirect home.
-		res.redirect('/research');
-	});
+	}));
 
 // GITHUB AUTH ROUTES
 router.get('/auth/github', middleware.checkIfLogged, passport.authenticate('github'));
 
 router.get('/auth/github/callback',
 	passport.authenticate('github', {
+		successRedirect: '/research',
+		successFlash: true,
 		failureRedirect: '/login',
 		failureFlash: true
-	}), (req, res) => {
-		// Successful authentication, redirect home.
-		res.redirect('/research');
-	});
+	}));
 
 
 //AUTH ROUTE
 router.post("/login", middleware.checkIfLogged, middleware.ifVerified, passport.authenticate("local", {
 	successRedirect: "/research",
+	successFlash: true,
 	failureRedirect: "/login",
 	failureFlash: true
 }));
