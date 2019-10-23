@@ -82,7 +82,6 @@
     "torrent-stream": "^1.1.0",
     "url-exists": "^1.0.3",
     "uuid": "^3.3.3",
-    "webtorrent": "^0.107.16",
     "ws": "^7.1.2",
     "x-ray": "^2.3.4",
     "xmlhttprequest": "^1.8.0",

@@ -87,14 +87,14 @@
 											<div class="input-group-prepend">
 												<label class="input-group-text" for="sort">Sort by: </label>
 											</div>
-											<select class="form-control" name="sorttype" id="sorttype">
+											<select class="form-control" name="sorttype" id="sorttype" required>
 												<option value="title">title</option>
 												<option value="year">year</option>
 												<option value="rating">rating</option>
 												<option value="peers">peers</option>
 												<option value="seeds">seeds</option>
 											</select>
-											<select class="form-control" name="sortorder" id="sortorder">
+											<select class="form-control" name="sortorder" id="sortorder" required>
 												<option value="asc">asc</option>
 												<option value="desc">desc</option>
 											</select>
@@ -105,15 +105,15 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text">Filter by Year</span>
 											</div>
-											<input type="number" name="yearmin" id="yearmin" aria-label="" value="1900" class="form-control">
-											<input type="number" name="yearmax" id="yearmax" aria-label="" value="2020" class="form-control">
+											<input type="number" name="yearmin" id="yearmin" aria-label="" value="1900" class="form-control" required>
+											<input type="number" name="yearmax" id="yearmax" aria-label="" value="2020" class="form-control" required>
 										</div>
 										<div class="input-group input-group-sm">
 											<div class="input-group-prepend">
 												<span class="input-group-text">Filter by Rating</span>
 											</div>
-											<input type="number" name="ratingmin" id="ratingmin" aria-label="" value="0" class="form-control">
-											<input type="number" name="ratingmax" id="ratingmax" aria-label="" value="10" class="form-control">
+											<input type="number" name="ratingmin" id="ratingmin" aria-label="" value="0" class="form-control" required>
+											<input type="number" name="ratingmax" id="ratingmax" aria-label="" value="10" class="form-control" required>
 										</div>
 									</div>
 								</div>
