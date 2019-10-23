@@ -1,17 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
 const Comments = require("../models/comments");
 const middleware = require("../middleware");
 const loginRegExp = RegExp("^[a-zA-Z0-9_-]{3,20}$");
 const nameRegExp = RegExp("^[a-zA-Z0-9 _-]{2,50}$");
 const emailRegExp = RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$");
 const passwordRegExp = RegExp("(?!^[0-9]*$)(?!^[a-zA-Z]*$)^([a-zA-Z0-9]{6,15})$");
-const PirateBay = require('thepiratebay');
-const fs = require('fs');
 const YtsApi = require('yts-api-pt');
 const yts = new YtsApi();
-const axios = require('axios');
 const xss = require('xss');
 const bioRegExp = RegExp("^[A-Za-z0-9 .'?!,@$#-_\n\r]{5,300}$");
 const TorrentSearchApi = require('torrent-search-api');

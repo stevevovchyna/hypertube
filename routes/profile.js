@@ -5,7 +5,6 @@ const router = express.Router({
 const passport = require("passport");
 const User = require("../models/user");
 const middleware = require("../middleware");
-const NodeGeocoder = require("node-geocoder");
 const async = require("async");
 const xss = require("xss");
 const mongoose = require('mongoose');

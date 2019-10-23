@@ -144,14 +144,12 @@ passport.use(new FortyTwoStrategy({
 												isProfile: true
 											}]
 										});
-										user.save((err) => {
+										user.save((err, res) => {
 											if (err) {
 												console.log(err);
 												return cb(err);
 											} else {
-												return cb(null, user[0], {
-													message: 'Your profile has been successfully created! Please click same button again to log in!'
-												});
+												return cb(null, res);
 											}
 										});
 									} else {
@@ -219,14 +217,12 @@ passport.use(new GitHubStrategy({
 														isProfile: true
 													}]
 												});
-												user.save((err) => {
+												user.save((err, res) => {
 													if (err) {
 														console.log(err);
 														return cb(err);
 													} else {
-														return cb(err, user[0], {
-															message: 'Your profile has been successfully created! Please click same button again to log in!'
-														});
+														return cb(err, res);
 													}
 												});
 											} else {

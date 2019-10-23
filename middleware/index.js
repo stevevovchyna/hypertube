@@ -192,9 +192,7 @@ middlewareObject.checkIfVideoIsPlayable = async (req, res, next) => {
 	try {
 		tor = await parseTorrent(fs.readFileSync(path));
 	} catch (e) {
-		if (e) {
-			console.log(e);
-		}
+		console.log(e);
 	}
 	if (tor.files) {
 		for (let file of tor.files) {

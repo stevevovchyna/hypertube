@@ -174,7 +174,7 @@ u.sort1337 = (movies, sortType, sortOrder) => {
 }
 
 u.getFileExtension = (filename) => {
-	return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+	return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
 }
 
 u.getFilePath = async (torrent) => {
@@ -385,11 +385,9 @@ u.stream_video = async (path, fileToStream, req, res, stream) => {
 			fs.createReadStream(path).pipe(res);
 		}
 	} catch (e) {
-		if (e) {
-			setTimeout(() => {
-				u.stream_video(path, fileToStream, req, res, stream);
-			}, 7000);
-		}
+		setTimeout(() => {
+			u.stream_video(path, fileToStream, req, res, stream);
+		}, 7000);
 	}
 }
 
