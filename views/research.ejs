@@ -1,0 +1,379 @@
+<%include partials/header%>
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-body">
+				<p></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-2 col-sm-12 mb-2">
+			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+				<a class="nav-link btn-outline-dark active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Popular</a>
+				<a class="nav-link btn-outline-dark" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Search</a>
+			</div>
+		</div>
+		<div class="col-md-10 col-sm-12">
+			<div class="tab-content" id="v-pills-tabContent">
+			<!-- SUGGESTIONS -->
+				<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+					<div class="row mb-4" id="suggestions">
+					<% for (var i = 0; i < foundMovies.length; i++) { %>
+						<div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+							<div class="card shadow">
+								<div class="containers">
+									<img class="card-img-top" src="<%=foundMovies[i].large_cover_image%>" alt="Card image cap">
+									<div class="overlay">
+										<div class="text">
+											<p>Production Year: <%= foundMovies[i].year %></p>
+											<p>IMDB Rating: <%= foundMovies[i].rating %></p>
+											<p>Genre: <%= foundMovies[i].genres %></p>
+										</div>
+									</div>
+								</div>
+								<div class="card-body">
+									<h5 class="card-title"><%=foundMovies[i].title%>
+										<% if(user && (user.includes(foundMovies[i].id.toString()))) { %><small
+											class="badge badge-success">seen</small><% } %></h5>
+									<% foundMovies[i].torrents.forEach(torrent => { %>
+									<small class="text-info">Size: <%=torrent.size%></small> | <small
+										class="text-success">Seeds: <%=torrent.seeds%></small> | <small
+										class="text-danger">Peers: <%=torrent.peers%></small> | <small
+										class="text-warning">Quality: <%= torrent.quality %></small>
+									<hr>
+									<% }); %>
+									<a href="/video/yts/<%=foundMovies[i].id%>" class="btn btn-dark btn-block">Go see the
+										movie</a>
+								</div>
+							</div>
+						</div>
+						<% } %>
+					<!-- END OF SUGGESTIONS -->
+					<!-- PAGINATION -->
+					</div>
+					<nav class="mt-3" style="margin-bottom: 7rem">
+						<ul class="pagination justify-content-center">
+							<li class="page-item"><a class="page-link text-dark" href="#" onclick="previousPage()">Previous</a></li>
+							<% for (var i = 1; i <= Math.ceil(foundMovies.length / 6); i++) { %>
+							<li class="page-item" id="<%=i%>"><a class="page-link text-dark" href="#" onclick="showPage('<%=i%>')"><%=i%></a>
+							</li>
+							<% } %>
+							<li class="page-item"><a class="page-link text-dark" href="#" onclick="nextPage()">Next</a></li>
+						</ul>
+					</nav>
+					<!-- END OF PAGINATION -->
+				</div>
+			<!-- SEARCH -->
+				<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+					<div class="row justify-content-left">
+						<div class="col-lg-12">
+							<form action="javascript:query(querydata.value, sorttype.value, sortorder.value, yearmin.value, yearmax.value, ratingmin.value, ratingmax.value, 1)">
+								<div class="row mb-2">
+									<div class="col-md-6 col-sm-12">
+										<div class="input-group input-group-sm">
+											<div class="input-group-prepend">
+												<label class="input-group-text" for="query">Search query</label>
+											</div>
+											<input type="text" id="querydata" required class="form-control" name="querydata" placeholder="You search query goes here..."
+												aria-describedby="basic-addon2" value="<%if (search) {%><%=query%><%}%>" pattern="^[A-Za-z0-9 -]{1,100}$" title="Search query can contain alphanumericals and '-'. Up to 100 characters.">
+										</div>
+										<div class="input-group input-group-sm">
+											<div class="input-group-prepend">
+												<label class="input-group-text" for="sort">Sort by: </label>
+											</div>
+											<select class="form-control" name="sorttype" id="sorttype">
+												<option value="title">title</option>
+												<option value="year">year</option>
+												<option value="rating">rating</option>
+												<option value="peers">peers</option>
+												<option value="seeds">seeds</option>
+											</select>
+											<select class="form-control" name="sortorder" id="sortorder">
+												<option value="asc">asc</option>
+												<option value="desc">desc</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6 col-sm-12">
+										<div class="input-group input-group-sm">
+											<div class="input-group-prepend">
+												<span class="input-group-text">Filter by Year</span>
+											</div>
+											<input type="number" name="yearmin" id="yearmin" aria-label="" value="1900" class="form-control">
+											<input type="number" name="yearmax" id="yearmax" aria-label="" value="2020" class="form-control">
+										</div>
+										<div class="input-group input-group-sm">
+											<div class="input-group-prepend">
+												<span class="input-group-text">Filter by Rating</span>
+											</div>
+											<input type="number" name="ratingmin" id="ratingmin" aria-label="" value="0" class="form-control">
+											<input type="number" name="ratingmax" id="ratingmax" aria-label="" value="10" class="form-control">
+										</div>
+									</div>
+								</div>
+								<button class="btn btn-sm btn-outline-secondary btn-block" type="submit">Search</button>
+								<small id="basic-addon1" class="form-text text-muted">Enter the title of the movie you'd like to watch</small>
+							</form>
+						</div>
+					</div>
+					<hr>
+					<div class="row" id="row"></div>
+					<nav class="mt-3" style="margin-bottom: 7rem">
+						<ul id="paginator" class="pagination justify-content-center"></ul>
+					</nav>
+				</div>
+			<!-- END OF SEARCH -->
+			</div>
+		</div>
+	</div>
+</div>	
+	<script>
+		const query = (queryData, sortType, sortOrder, yearmin, yearmax, ratingmin, ratingmax, page) => {
+			$('#row').empty();
+			$('#paginator').empty();
+			var container = $('<div></div>');
+			container.addClass('m-auto');
+			var loadingLight = $('<div></div>');
+			loadingLight.addClass('spinner-grow text-light');
+			loadingLight.attr('style', 'width: 4rem; height: 4rem;')
+			loadingLight.attr('role', 'status');
+			var loadingSecondary = $('<div></div>');
+			loadingSecondary.addClass('spinner-grow text-secondary');
+			loadingSecondary.attr('style', 'width: 4rem; height: 4rem;')
+			loadingSecondary.attr('role', 'status');
+			var loadingDark = $('<div></div>');
+			loadingDark.addClass('spinner-grow text-dark');
+			loadingDark.attr('style', 'width: 4rem; height: 4rem;')
+			loadingDark.attr('role', 'status');
+			container.append(loadingLight, loadingSecondary, loadingDark);
+			$('#row').append(container);
+			if (queryData !== "") {
+				$.ajax({
+					url: "http://localhost:3000/research/query/" + page,
+					method: "put",
+					data: {
+						query: queryData,
+						sortOrder: sortOrder,
+						sortType: sortType,
+						year: {
+							min: yearmin,
+							max: yearmax
+						},
+						rating: {
+							min: ratingmin,
+							max: ratingmax
+						}
+					}
+				}).done((resp) => {
+					if (resp.status == 'success') {
+						$('#row').empty();
+						const movies = resp.foundMovies;
+						for (var i = 0; i < movies.length; i++) {
+							if (movies[i].provider == 'yts') {
+								var col = $('<div></div>');
+								col.addClass('col-lg-4 col-md-6 col-sm-12 mb-2');
+								$('#row').append(col);
+								var card = $('<div></div>');
+								card.addClass('card shadow');
+								col.append(card);
+								var containers = $('<div></div>');
+								containers.addClass('containers');
+								var img = $('<img>');
+								img.addClass('card-img-top');
+								var src = movies[i].large_cover_image;
+								img.attr('src', src);
+								var overlay = $('<div></div>');
+								overlay.addClass('overlay');
+								var text = $('<div></div>');
+								text.addClass('text');
+								var year = $('<p></p>').text(movies[i].year);
+								var rating = $('<p></p>').text(movies[i].rating);
+								var genre = $('<p></p>').text(movies[i].genres);
+								text.append(year, rating, genre);
+								overlay.append(text);
+								containers.append(img, overlay);
+								var cardBody = $('<div></div>');
+								cardBody.addClass('card-body');
+								var h5 = $('<h5></h5>').text(movies[i].title);
+								if (resp.user && (resp.user.includes(movies[i].id.toString()))) {
+									var seenSmall = $('<small></small>').text('seen');
+									seenSmall.addClass('badge badge-success')
+									h5.append(seenSmall);
+								}
+								cardBody.append(h5);
+								movies[i].torrents.forEach(torrent => {
+									var smallSize = $('<small></small>').text('Size: ' + torrent.size +
+										' | ');
+									smallSize.addClass('text-info');
+									var smallSeeds = $('<small></small>').text('Seeds: ' + torrent
+										.seeds +
+										' | ');
+									smallSeeds.addClass('text-success');
+									var smallPeers = $('<small></small>').text('Peers: ' + torrent
+										.peers +
+										' | ');
+									smallPeers.addClass('text-danger');
+									var smallQuality = $('<small></small>').text('Quality: ' + torrent
+										.quality);
+									smallQuality.addClass('text-warning');
+									var hr = $('<hr>');
+									cardBody.append(smallSize, smallSeeds, smallPeers, smallQuality,
+										hr);
+								})
+								var a = $('<a></a>').text('Go see the movie');
+								a.addClass('btn btn-dark btn-block');
+								a.attr('href', '/video/yts/' + movies[i].id);
+								cardBody.append(a);
+								card.append(containers, cardBody);
+							} else if (movies[i].provider == '1337x') {
+								var col = $('<div></div>');
+								col.addClass('col-lg-4 col-md-6 col-sm-12 mb-2');
+								$('#row').append(col);
+								var card = $('<div></div>');
+								card.addClass('card');
+								col.append(card);
+								var img = $('<img>');
+								img.addClass('card-img-top');
+								var src =
+									'https://res.cloudinary.com/dstvx12kw/image/upload/v1568660992/1337x-proxy-1_kf15nw.png';
+								img.attr('src', src);
+								var cardBody = $('<div></div>');
+								cardBody.addClass('card-body');
+								var h5 = $('<h5></h5>').text(movies[i].title);
+								if (resp.user && (resp.user.includes(movies[i].encodedDesc.toString()))) {
+									var seenSmall = $('<small></small>').text('seen');
+									seenSmall.addClass('badge badge-success')
+									h5.append(seenSmall);
+									console.log('tut!')
+								}
+								var smallSize = $('<small></small>').text('Size: ' + movies[i].size + ' | ');
+								smallSize.addClass('text-info');
+								var smallSeeds = $('<small></small>').text('Seeds: ' + movies[i].seeds +
+									' | ');
+								smallSeeds.addClass('text-success');
+								var smallPeers = $('<small></small>').text('Peers: ' + movies[i].peers +
+									' | ');
+								smallPeers.addClass('text-danger');
+								var hr = $('<hr>');
+								cardBody.append(h5, smallSize, smallSeeds, smallPeers, hr);
+								var a = $('<a></a>').text('Go see the movie');
+								a.addClass('btn btn-dark btn-block');
+								a.attr('href', '/video/view1337x/' + movies[i].encodedDesc);
+								cardBody.append(a);
+								card.append(img, cardBody);
+							}
+						}
+						var previousPage = $('<li></li>');
+						previousPage.addClass('page-item');
+						var aPrevious = $('<a></a>').text('Previous');
+						if (page == 1) {
+							aPrevious.addClass('page-link text-dark disabled');
+						} else {
+							aPrevious.addClass('page-link text-dark');
+							aPrevious.attr('href', '#');
+							aPrevious.attr('onclick', 'query("' + queryData + '", "' + sortType + '", "' + sortOrder + '", "' + yearmin + '", "' + yearmax + '", "' + ratingmin + '", "' + ratingmax + '", "' + (Number(page) - 1) + '")');
+						}
+						previousPage.append(aPrevious);
+						$('#paginator').append(previousPage);
+						for (var i = 1; i <= (Math.ceil(resp.totalNumber / perPage)); i++) {
+							var pageSelect = $('<li></li>');
+							pageSelect.addClass('page-item');
+							var aSelect = $('<a></a>').text(i);
+							if (i == page) {
+								aSelect.addClass('page-link text-dark disabled');
+								pageSelect.addClass('active')
+							} else {
+								aSelect.addClass('page-link text-dark');
+								aSelect.attr('href', '#');
+								aSelect.attr('onclick', 'query("' + queryData + '", "' + sortType + '", "' + sortOrder + '", "' + yearmin + '", "' + yearmax + '", "' + ratingmin + '", "' + ratingmax + '", "' + i + '")');
+							}
+							pageSelect.append(aSelect);
+							$('#paginator').append(pageSelect);
+						}
+						var nextPage = $('<li></li>');
+						nextPage.addClass('page-item');
+						var aNext = $('<a></a>').text('Next');
+						if (page == Math.ceil(resp.totalNumber / resp.perPage)) {
+							aNext.addClass('page-link  text-dark disabled');
+						} else {
+							aNext.addClass('page-link text-dark');
+							aNext.attr('href', '#');
+							aNext.attr('onclick', 'query("' + queryData + '", "' + sortType + '", "' + sortOrder + '", "' + yearmin + '", "' + yearmax + '", "' + ratingmin + '", "' + ratingmax + '", "' + (Number(page) + 1) + '")');
+						}
+						nextPage.append(aNext);
+						$('#paginator').append(nextPage);
+					} else if (resp.status == 'error') {
+						$('#row').empty();
+						$('div.modal-body > p').text(resp.message);
+						$('#myModal').modal('show');
+					}
+				});
+			}
+		}
+		var thumbs = document.getElementById('suggestions');
+		var currentPage = 1;
+		var perPage = 6;
+		var totalEntries = parseInt("<%=foundMovies.length%>");
+		if (currentPage === 1) {
+			for (var i = perPage; i < thumbs.childElementCount; i++) {
+				thumbs.children[i].style.display = "none";
+			}
+			document.getElementById('1').classList.add('active');
+		}
+		const showPage = (pageNumber) => {
+			document.getElementById(currentPage).classList.remove('active');
+			currentPage = parseInt(pageNumber);
+			for (var i = 0; i < thumbs.childElementCount; i++) {
+				thumbs.children[i].style.display = "none";
+			}
+			for (var i = (pageNumber * perPage) - perPage; i < (pageNumber * perPage); i++) {
+				if (thumbs.children[i]) {
+					thumbs.children[i].style.display = "";
+				}
+			}
+			document.getElementById(currentPage).classList.add('active');
+		}
+		const previousPage = () => {
+			if (currentPage === 1) {
+				return false;
+			} else {
+				document.getElementById(currentPage).classList.remove('active');
+				var pageNumber = currentPage - 1;
+				currentPage -= 1;
+				for (var i = 0; i < thumbs.childElementCount; i++) {
+					thumbs.children[i].style.display = "none";
+				}
+				for (var i = (pageNumber * perPage) - perPage; i < (pageNumber * perPage); i++) {
+					if (thumbs.children[i]) {
+						thumbs.children[i].style.display = "";
+					}
+				}
+				document.getElementById(currentPage).classList.add('active');
+			}
+		}
+		const nextPage = () => {
+			if (currentPage === Math.ceil(totalEntries / perPage)) {
+				return false;
+			} else {
+				document.getElementById(currentPage).classList.remove('active');
+				var pageNumber = currentPage + 1;
+				currentPage += 1;
+				for (var i = 0; i < thumbs.childElementCount; i++) {
+					thumbs.children[i].style.display = "none";
+				}
+				for (var i = (pageNumber * perPage) - perPage; i < (pageNumber * perPage); i++) {
+					if (thumbs.children[i]) {
+						thumbs.children[i].style.display = "";
+					}
+				}
+				document.getElementById(currentPage).classList.add('active');
+			}
+		}
+	</script>
+	<%include partials/footer%>

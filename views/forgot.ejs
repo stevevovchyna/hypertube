@@ -1,0 +1,25 @@
+<%include partials/header%>
+
+<div class="container" style="margin-bottom: 7rem !important;">
+	<div>
+		<h1>Reset Password</h1>
+		<small id="usernameHelp" class="form-text text-muted">Please enter an email address you've user for the
+			registration so we could send you reset link</small>
+		<form action="/forgot" method="post">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">@</span>
+				</div>
+				<input required aria-describedby="basic-addon1" class="form-control" type="email" id="usernameHelp"
+					name="email" placeholder="Your email goes here!" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+					title="Please enter a valid email address">
+			</div>
+			<hr>
+			<div class="form-group">
+				<button class="btn btn-primary btn-block" type="submit">Submit</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<%include partials/footer%>

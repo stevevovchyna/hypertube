@@ -1,0 +1,83 @@
+*:focus {
+	outline: none !important;
+}
+
+.show {
+	display: block;
+}
+
+.page-item.active .page-link {
+	z-index: 1;
+	color: white;
+	background-color: darkgray;
+	border-color: darkgray;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #050505;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgb(46, 44, 44);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.containers {
+	position: relative;
+}
+
+.containers>.overlay {
+	position: absolute;
+	bottom: 0;
+	background: rgb(0, 0, 0) !important;
+	background: rgba(0, 0, 0, 0.5) !important;
+	/* Black see-through */
+	color: #f1f1f1 !important;
+	width: 100%;
+	transition: .5s ease;
+	opacity: 0;
+	color: white;
+	font-size: 1rem;
+	padding: 20px;
+	text-align: left;
+}
+
+.containers:hover .overlay {
+	opacity: 1;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+	transition: .5s ease;
+	background-color: #008CBA;
+}
+
+#image {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}

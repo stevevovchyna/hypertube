@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.js"
+		integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+	</script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+	</script>
+
+	<!-- FONTAWESOME -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<!-- socket -->
+	<script src="/socket.io/socket.io.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/app.css">
+	<script type="text/javascript" src="/app.js"></script>
+	<script type="text/javascript" src="/moment.js"></script>
+
+
+	<title>Hypertube</title>
+
+	<%if (currentUser) {%>
+	<script type="text/javascript">
+		var mySocketId = "<%=currentUser._id%>";
+		var eventSocket = io('/events');
+		eventSocket.on('broadcast', (data) => {
+		});
+		eventSocket.on('connect', () => {
+			// Connected!!! let's sign-up for to receive messages for this room
+			eventSocket.emit('connectToRoom', mySocketId);
+		});
+	</script>
+	<%}%>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow" style="margin-bottom: 2rem; opacity:0.8">
+		<a class="navbar-brand mb-0 h1" href="#">Hypertube</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<% if (currentUser) { %>
+	<ul class="navbar-nav mr-auto">
+		<li class="nav-item active">
+			<a class="nav-link" href="/research">Home<span class="sr-only">(current)</span></a>
+		</li>
+		<li class="nav-item active dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+				aria-haspopup="true" aria-expanded="false">
+				Profile
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				<a class="dropdown-item" href="/profile/<%=currentUser._id %>">My Profile</a>
+				<a class="dropdown-item" href="/profile/<%=currentUser._id %>/edit">Edit my Profile</a>
+			</div>
+		</li>
+	</ul>
+	<% } %>
+	<ul class="navbar-nav my-2 ml-auto my-lg-0">
+		<%if (!currentUser) { %>
+		<li class="nav-item active"><a class="nav-link" href="/login">Log In</a></li>
+		<li class="nav-item active"><a class="nav-link" href="/register">Sign Up</a></li>
+		<%} else { %>
+		<li class="nav-item active"><a class="nav-link">wazzup, <%=currentUser.username%>?</a></li>
+		<li class="nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
+		<%}%>
+			</ul>
+		</div>
+</nav>
+
+<div aria-live="polite" aria-atomic="true" style="position: relative;">
+		<!-- Position it -->
+		<div id="toasts" class="sticky-top" style="position: fixed; top: 5rem; right: 3%; opacity: 0.98;">
+			<!-- Then put toasts within -->
+			<div class="toast" style="max-width: 400px" hidden id="example-toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+				<div class="toast-header bg-dark text-white">
+					<strong class="mr-auto"></strong>
+					<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+						<span aria-hidden="true" class="text-white">&times;</span>
+					</button>
+				</div>
+				<div class="toast-body"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container mb-3" id="flash">
+		<%if (error && error.length > 0) { %>
+		<div class="alert alert-danger alert-dismissible"><%=error%></div>
+		<% } %>
+		<%if (success && success.length > 0) { %>
+		<div class="alert alert-success alert-dismissible"><%=success%></div>
+		<% } %>
+		</div>
